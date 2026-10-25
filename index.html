@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de nota para aprobar: ¿cuánto necesito en el examen final? | Apruebo</title>
+<meta name="description" content="Calcula qué nota necesitas en el examen final para aprobar la materia. Agrega tus notas y porcentajes y mira el resultado al instante. Gratis y sin registro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#E8F0FB;--ink:#101B33;--muted:#475873;--line:#B9C8E0;--yellow:#FFD84D;--ok:#0A8F58;--mid:#D96A00;--hard:#D62839;--tone:#2438D6;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;color:var(--ink);font:400 16px/1.55 "Instrument Sans",system-ui,sans-serif;background:var(--paper) linear-gradient(#C9D8EE 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,#C9D8EE 1px,transparent 1px) 0 0/28px 28px}
+h1,h2,.logo{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;letter-spacing:-.025em;line-height:1.02;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{padding:22px 0;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:26px;font-weight:800;display:flex;align-items:center;gap:10px}
+.logo i{display:grid;place-items:center;width:34px;height:34px;background:var(--yellow);border:2px solid var(--ink);border-radius:50%;font-style:normal;font-size:18px;transform:rotate(-8deg)}
+.chip{font-size:14px;font-weight:600;background:#fff;border:2px solid var(--ink);border-radius:99px;padding:4px 14px;transform:rotate(2deg)}
+.hero{padding:30px 0 36px}
+h1{font-size:clamp(40px,7.5vw,76px);font-weight:800;max-width:13ch}
+.hero p{max-width:50ch;color:var(--muted);font-size:19px;margin:18px 0 0}
+.grid{display:grid;gap:28px;grid-template-columns:1fr;align-items:start}
+@media(min-width:900px){.grid{grid-template-columns:1.05fr .95fr}.result{position:sticky;top:20px}}
+.panel{background:#fff;border:2px solid var(--ink);border-radius:14px;padding:26px;box-shadow:7px 7px 0 var(--ink)}
+h2{font-size:24px;font-weight:600;margin-bottom:18px}
+.cfg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:26px}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+input{width:100%;font:inherit;color:inherit;background:#F4F8FE;border:2px solid var(--line);border-radius:10px;padding:10px 12px;min-height:46px}
+input:focus{border-color:var(--ink);background:#fff}
+input:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #2438D6;outline-offset:2px}
+.head,.row{display:grid;grid-template-columns:1fr 82px 82px 40px;gap:8px;align-items:center}
+.head{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.row{margin-bottom:8px}
+.x{height:44px;border:0;background:none;color:var(--muted);font-size:24px;border-radius:10px;cursor:pointer}
+.x:hover{background:#FDECEE;color:var(--hard)}
+.add{margin-top:8px;width:100%;font:600 16px "Instrument Sans",sans-serif;color:var(--ink);background:var(--yellow);border:2px solid var(--ink);border-radius:10px;padding:11px 16px;min-height:46px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+.add:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.sum{margin:18px 0 0;font-size:14px;color:var(--muted)}
+.sheet{background:#fff repeating-linear-gradient(transparent 0 31px,#CFDCF0 31px 32px);padding-left:56px;position:relative;overflow:hidden}
+.sheet::before{content:"";position:absolute;left:38px;top:0;bottom:0;width:2px;background:#F08A94}
+.res-label{font-weight:600;margin:0 0 10px;background:#fff;display:inline-block;padding:0 6px 0 0}
+.grade{position:relative;display:inline-block;padding:26px 44px;margin:6px 0 10px -6px}
+.pen{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.pen path{fill:none;stroke:var(--tone);stroke-width:5;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:0;transition:stroke .25s}
+.pen.draw path{animation:pen .7s ease-out}
+@keyframes pen{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.big{font:400 clamp(72px,12vw,120px)/1 "Permanent Marker","Bricolage Grotesque",cursive;color:var(--tone);transition:color .25s;white-space:nowrap}
+.big small{font:600 20px "Instrument Sans",sans-serif;color:var(--muted);margin-left:8px}
+.msg{font-size:18px;font-weight:500;margin:0 0 30px;min-height:3.4em;background:linear-gradient(#fff,#fff) 0 0/100% 100% no-repeat;display:inline-block;padding-right:6px}
+.ruler{position:relative;height:38px;border:2px solid var(--ink);border-radius:6px;background:var(--yellow) repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5%) bottom/100% 14px no-repeat;margin:34px 0 8px}
+.pass{position:absolute;top:-10px;bottom:-10px;width:3px;background:var(--ink)}
+.pass span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:600;white-space:nowrap;background:#fff;padding:0 4px}
+.pin{position:absolute;top:-8px;width:20px;height:20px;margin-left:-10px;border:3px solid var(--ink);border-radius:50%;background:var(--tone);transition:left .45s cubic-bezier(.3,1.4,.5,1),background .25s;left:0}
+.ends{display:flex;justify-content:space-between;font-size:13px;font-weight:600;background:#fff}
+.err{color:var(--hard);font-weight:600}
+.empty{--tone:#9FB1CC}.ok{--tone:var(--ok)}.mid{--tone:var(--mid)}.hard{--tone:var(--hard)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.seo{padding:56px 0 24px;max-width:70ch}
+.seo h2{font-size:30px;margin-bottom:12px}
+.seo p{color:var(--muted)}
+details{border-top:2px solid var(--line);padding:14px 0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:8px 0 0}
+footer{padding:28px 0 40px;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="wrap"><div class="logo"><i>✓</i>Apruebo</div><span class="chip">Gratis y sin registro</span></header>
+
+<main class="wrap">
+<section class="hero">
+<h1>¿Qué nota necesitas para aprobar?</h1>
+<p>Escribe las notas que ya tienes y su porcentaje. Te decimos al instante cuánto necesitas en lo que falta.</p>
+</section>
+
+<div class="grid">
+<section class="panel" aria-labelledby="t1">
+<h2 id="t1">Tus notas</h2>
+<div class="cfg">
+<div><label for="max">Nota máxima</label><input id="max" inputmode="decimal" value="100"></div>
+<div><label for="pass">Nota para aprobar</label><input id="pass" inputmode="decimal" value="70"></div>
+</div>
+<div class="head"><span>Evaluación</span><span>Nota</span><span>Peso (%)</span><span></span></div>
+<div id="rows"></div>
+<button type="button" class="add" id="add">+ Agregar evaluación</button>
+<p class="sum" id="sum"></p>
+</section>
+
+<section class="panel sheet result empty" id="res" aria-live="polite">
+<p class="res-label" id="lbl">Nota que necesitas</p><br>
+<div class="grade">
+<svg class="pen" id="pen" viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M152 6C72 4 8 34 10 76c2 44 68 70 144 68 82-2 138-30 136-74C288 30 226 8 152 6c-24 0-44 3-60 10"/></svg>
+<div class="big"><span id="num">–</span><small id="of"></small></div>
+</div>
+<p class="msg" id="msg">Agrega al menos una evaluación con su nota y su porcentaje.</p>
+<div class="ruler" aria-hidden="true"><b class="pass" id="pm"><span>aprobar</span></b><i class="pin" id="pin"></i></div>
+<div class="ends" aria-hidden="true"><span>0</span><span id="maxl">100</span></div>
+</section>
+</div>
+
+<!-- Espacio reservado para anuncio (AdSense) -->
+
+<section class="seo">
+<h2>Cómo calcular la nota que necesitas en el examen final</h2>
+<p>Cada evaluación aporta a tu nota final según su peso. Apruebo suma lo que ya acumulaste, se lo resta a la nota mínima para aprobar y reparte lo que falta entre el porcentaje restante. Funciona con cualquier escala: 100, 20, 10 o 5.</p>
+<details><summary>¿Qué pasa si el peso total pasa de 100%?</summary><p>Revisa los porcentajes. Los pesos de todas tus evaluaciones deben sumar 100% como máximo.</p></details>
+<details><summary>¿Puedo usar otra escala de notas?</summary><p>Sí. Cambia la nota máxima y la nota para aprobar. Por ejemplo, 10 y 6, o 20 y 11.</p></details>
+<details><summary>¿Se guardan mis datos?</summary><p>Solo en tu propio navegador, para que no tengas que escribirlos otra vez. No enviamos nada a ningún servidor.</p></details>
+</section>
+</main>
+<footer><div class="wrap">Apruebo · Calculadora gratuita para estudiantes</div></footer>
+
+<script>
+const $=s=>document.querySelector(s),rows=$('#rows');
+const num=v=>{const n=parseFloat(String(v).replace(',','.'));return isNaN(n)?null:n};
+const fmt=n=>(Math.round(n*100)/100).toLocaleString('es',{maximumFractionDigits:2});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let shown=null,tw=0,lastCls='';
+function addRow(n='',g='',w=''){
+  const d=document.createElement('div');d.className='row';
+  d.innerHTML='<input class="n" placeholder="Ej. Parcial 1" aria-label="Nombre" value="'+esc(n)+'"><input class="g" inputmode="decimal" placeholder="Nota" aria-label="Nota obtenida" value="'+esc(g)+'"><input class="w" inputmode="decimal" placeholder="%" aria-label="Peso en porcentaje" value="'+esc(w)+'"><button type="button" class="x" aria-label="Quitar evaluación">×</button>';
+  rows.appendChild(d);
+}
+function setNum(v){
+  const el=$('#num');cancelAnimationFrame(tw);
+  if(typeof v!=='number'||still||shown===null){el.textContent=typeof v==='number'?fmt(v):v;shown=typeof v==='number'?v:null;return}
+  const a=shown,t0=performance.now();
+  (function f(t){const k=Math.min((t-t0)/450,1),e=1-Math.pow(1-k,3);el.textContent=fmt(a+(v-a)*e);if(k<1)tw=requestAnimationFrame(f);else shown=v})(t0);
+}
+function show(cls,lbl,big,of,msg,pos){
+  $('#res').className='panel sheet result '+cls;
+  $('#lbl').textContent=lbl;setNum(big);$('#of').textContent=of;$('#msg').innerHTML=msg;
+  $('#pin').style.left=pos+'%';
+  const key=cls+of;if(key!==lastCls&&cls!=='empty'&&!still){const p=$('#pen');p.classList.remove('draw');void p.getBoundingClientRect();p.classList.add('draw')}
+  lastCls=key;
+}
+function calc(){
+  const max=num($('#max').value),pass=num($('#pass').value);
+  $('#maxl').textContent=max?fmt(max):'';
+  const E=(m)=>show('empty','Nota que necesitas','–','','<span class="err">'+m+'</span>',0);
+  if(!max||max<=0||pass===null||pass<0||pass>max){$('#sum').textContent='';return E('Revisa la nota máxima y la nota para aprobar.')}
+  $('#pm').style.left=(pass/max*100)+'%';
+  let pts=0,w=0,n=0,bad='';
+  rows.querySelectorAll('.row').forEach(r=>{
+    const g=num(r.querySelector('.g').value),p=num(r.querySelector('.w').value);
+    if(g===null||p===null)return;
+    if(g<0||g>max)bad='Una nota está fuera de la escala (0 a '+fmt(max)+').';
+    else if(p<=0||p>100)bad='Cada peso debe estar entre 1 y 100.';
+    pts+=g/max*p;w+=p;n++;
+  });
+  const rem=100-w;
+  $('#sum').textContent=n?'Peso acumulado: '+fmt(w)+'%. Falta evaluar: '+fmt(Math.max(rem,0))+'%.':'';
+  try{localStorage.setItem('apruebo',JSON.stringify({max:$('#max').value,pass:$('#pass').value,rows:[...rows.querySelectorAll('.row')].map(r=>[...r.querySelectorAll('input')].map(i=>i.value))}))}catch(e){}
+  if(bad)return E(bad);
+  if(!n)return show('empty','Nota que necesitas','–','','Agrega al menos una evaluación con su nota y su porcentaje.',0);
+  if(rem<0)return E('Los pesos suman más de 100%. Revisa los porcentajes.');
+  if(rem===0){
+    const f=pts/100*max,ok=f>=pass;
+    return show(ok?'ok':'hard','Tu nota final',f,'/ '+fmt(max),ok?'Aprobaste la materia.':'No alcanzaste la nota para aprobar ('+fmt(pass)+').',f/max*100);
+  }
+  const need=(pass/max*100-pts)/rem*max;
+  if(need<=0)return show('ok','Nota que necesitas',0,'/ '+fmt(max),'Ya tienes los puntos para aprobar. Aunque saques 0 en lo que falta, pasas la materia.',0);
+  if(need>max)return show('hard','Nota que necesitas',need,'/ '+fmt(max),'Con las notas actuales no alcanzas a aprobar: necesitarías más que la nota máxima.',100);
+  const ratio=need/max,cls=ratio<=.6?'ok':ratio<=.85?'mid':'hard';
+  const txt={ok:'Es alcanzable. Con un estudio normal llegas.',mid:'Se puede, pero necesitas prepararte bien.',hard:'Es muy exigente. Conviene estudiar a fondo y no perder puntos.'}[cls];
+  show(cls,'Nota que necesitas en el '+fmt(rem)+'% restante',need,'/ '+fmt(max),txt,ratio*100);
+}
+document.addEventListener('input',calc);
+$('#add').onclick=()=>{addRow();rows.lastChild.querySelector('input').focus()};
+rows.addEventListener('click',e=>{if(e.target.classList.contains('x')){e.target.parentNode.remove();calc()}});
+let saved=null;try{saved=JSON.parse(localStorage.getItem('apruebo'))}catch(e){}
+if(saved&&saved.rows&&saved.rows.length){$('#max').value=saved.max;$('#pass').value=saved.pass;saved.rows.forEach(r=>addRow(r[0],r[1],r[2]))}
+else{addRow();addRow();addRow()}
+calc();
+</script>
+</body>
+</html>
